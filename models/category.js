@@ -18,23 +18,22 @@ const imgSchema = new Schema({
 
 });
 
-const aboutMeSchema = new Schema({
+const categorySchema = new Schema({
   name:{
     type: String,
     required: true,
   },
-  history:{
+  type:{
     type: String,
     required: true,
   },
-  logo:{
+  imagen:{
     type: imgSchema,
     default: {}
   },
-  imgAboutMe:{
-    type: imgSchema,
-    default: {}
-  },
+  active:{
+    type: Boolean
+  }
 
 })
-export const AboutMe = model('empresa', aboutMeSchema)
+export const Category = model('categoria', categorySchema)

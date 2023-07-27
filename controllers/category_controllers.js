@@ -1,51 +1,43 @@
-import { AboutMe } from "../models/aboutMe.js"
+import { Category } from "../models/category.js"
 import { nanoid } from 'nanoid'
-import { uploadImgPrincipal, deleteImgPrincipal } from "../utils/imageKit.js"
+import { uploadImgPrincipal } from "../utils/imageKit.js"
 
-export const getEmpresa = async (req, res) => {
+export const getCategory = async (req, res) => {
   try {
-    const aboutMe = await AboutMe.findOne().lean()
-    return res.json(aboutMe)
+    const params = req.query
+    const category = await Category.find(params).lean()
+    return res.json(category)
   } catch (e) {
     console.log(e)
     return  res.status(500).json({error:'Error de servidor'}) 
   }
 }
-export const createEmpresa = async (req, res) => {
+export const createCategory = async (req, res) => {
   try {
-    const {name, history} = req.body
-    const empresa = new AboutMe({
+    console.log(req.body)
+    const {name, type} = req.body
+    const category = new Category({
       name,
-      history,
+      type,
+      active:true
     })
     console.log(req.files)
     if(req.files){
-      const logo = req.files?.logo
-      const extensionLogo = logo.mimetype.split('/')[1]
-      const namePathlogo = `${nanoid(10)}.${extensionLogo}`
-      const resImgPLogo = await uploadImgPrincipal(logo.data, namePathlogo)
-      const imgAboutMe = req.files?.imgAboutMe
-      const extensionAboutMe = logo.mimetype.split('/')[1]
-      const namePathAboutMe = `${nanoid(10)}.${extensionAboutMe}`
-      const resImgPAboutMe = await uploadImgPrincipal(imgAboutMe.data, namePathAboutMe)
+      const imagen = req.files?.imagen
+      const extension = imagen.mimetype.split('/')[1]
+      const namePath = `${nanoid(10)}.${extension}`
+      const resImgP = await uploadImgPrincipal(imagen.data, namePath)
       console.log('imagen', resImgP)
-      empresa.logo = {
-        path:resImgPLogo.filePath,
-        type:extensionLogo,
-        url:resImgPLogo.url,
-        name:resImgPLogo.name,
-        fileId:resImgPLogo.fileId
-      }
-      empresa.imgAboutMe = {
-        path:resImgPAboutMe.filePath,
-        type:extensionAboutMe,
-        url:resImgPAboutMe.url,
-        name:resImgPAboutMe.name,
-        fileId:resImgPAboutMe.fileId
+      category.imagen = {
+        path:resImgP.filePath,
+        type:extension,
+        url:resImgP.url,
+        name:resImgP.name,
+        fileId:resImgP.fileId
       }
     }
-    const newEmpresa = await empresa.save()
-    return res.json({newEmpresa})
+    const newCategory = await category.save()
+    return res.json(newCategory)
   } catch (e) {
     console.log(e)
     return  res.status(500).json({error:'Error de servidor'}) 

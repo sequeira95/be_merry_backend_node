@@ -7,6 +7,7 @@ import productsRouters from './routes/product_routes.js'
 import usersRouters from './routes/usuarios_routes.js'
 import codeRouters from './routes/code_routes.js'
 import empresaRouters from './routes/aboutMe_routes.js'
+import categoryRouters from './routes/category_routes.js'
 import cookieParser from 'cookie-parser';
 import { create } from 'express-handlebars';
 import fileUpload from 'express-fileupload';
@@ -44,6 +45,7 @@ app.use('/api/v1/products',productsRouters)
 app.use('/api/v1/users',usersRouters)
 app.use('/api/v1/codes',codeRouters)
 app.use('/api/v1/empresa',empresaRouters)
+app.use('/api/v1/category',categoryRouters)
 app.use(express.static("public"));
 //app.use(express.static("views/components"));
 
