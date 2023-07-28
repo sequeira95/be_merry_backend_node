@@ -1,6 +1,6 @@
 import { Category } from "../models/category.js"
 import { nanoid } from 'nanoid'
-import { uploadImgPrincipal } from "../utils/imageKit.js"
+import { uploadImgPrincipal, deleteImgPrincipal } from "../utils/imageKit.js"
 
 export const getCategory = async (req, res) => {
   try {
@@ -14,20 +14,17 @@ export const getCategory = async (req, res) => {
 }
 export const createCategory = async (req, res) => {
   try {
-    console.log(req.body)
     const {name, type} = req.body
     const category = new Category({
       name,
       type,
       active:true
     })
-    console.log(req.files)
     if(req.files){
       const imagen = req.files?.imagen
       const extension = imagen.mimetype.split('/')[1]
       const namePath = `${nanoid(10)}.${extension}`
       const resImgP = await uploadImgPrincipal(imagen.data, namePath)
-      console.log('imagen', resImgP)
       category.imagen = {
         path:resImgP.filePath,
         type:extension,
@@ -43,21 +40,18 @@ export const createCategory = async (req, res) => {
     return  res.status(500).json({error:'Error de servidor'}) 
   }
 }
-/*export const editEmpresa = async (req, res) => {
+export const editCategory = async (req, res) => {
   try{
-    const {name, history, _id} = req.body
-    const aboutMe = await AboutMe.findOne({_id}).lean()
-    console.log('producto', aboutMe)
-    if(req?.files?.logo){
+    const {_id, name, type, activo} = req.body
+    const category = await Category.findOne({_id}).lean()
+    if(req?.files?.imagen){
       //Cambiar imagen anterior por la nueva, eliminar de imakit y agregar
-      const logo = req.files?.logo
-      console.log(logo)
-      const extension = logo.mimetype.split('/')[1]
+      const categoryImg = req.files?.imagen
+      const extension = categoryImg.mimetype.split('/')[1]
       const namePath = `${nanoid(10)}.${extension}`
-      await deleteImgPrincipal(aboutMe.logo.fileId)
-      const resImgP = await uploadImgPrincipal(logo.data, namePath)
-      console.log('imagen', resImgP)
-      aboutMe.logo = {
+      await deleteImgPrincipal(category.imagen.fileId)
+      const resImgP = await uploadImgPrincipal(categoryImg.data, namePath)
+      category.imagen = {
         path:resImgP.filePath,
         type:extension,
         url:resImgP.url,
@@ -65,15 +59,25 @@ export const createCategory = async (req, res) => {
         fileId:resImgP.fileId
       }
     }
-    await AboutMe.updateOne({_id}, {
+    await Category.updateOne({_id}, {
       name,
-      history,
-      logo:aboutMe.logo
+      type,
+      active:activo,
+      imagen:category.imagen
     })
     return res.json({status:'datos actualizado con exito'})
   }catch(e){
     console.log(e)
     return  res.status(500).json({error:'Error de servidor'}) 
   }
-
-}*/
+}
+export const delteCategory = async (req, res) => {
+  try{
+    const {_id} = req.body
+    await Category.deleteOne({_id})
+    return res.json({status:'Categoria eliminada con exito'})
+  }catch(e){
+    console.log(e)
+    return  res.status(500).json({error:'Error de servidor'}) 
+  }
+}
