@@ -41,6 +41,13 @@ const productSchema = new Schema({
     ref:"code",
     required: true,
   },
+  anuncio:{
+    type: Schema.Types.ObjectId,
+    ref:"anuncio",
+  },
+  descuentoPrecio:{
+    type: Number,
+  },
   category:{
     type: String,
     required: true
@@ -58,17 +65,15 @@ const productSchema = new Schema({
     required: false,
   },
   size:{
-    type: Array,
+    type: String,
     required: false,
   },
   creadorId:{
     type: Schema.Types.ObjectId,
     ref:"user",
-    required: true,
   },
   creadoPor:{
     type: String,
-    required: false,
   },
   imgPrincipal:{
     type: imgSchema,

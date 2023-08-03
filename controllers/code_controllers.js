@@ -4,7 +4,7 @@ import { User } from '../models/User.js'
 export const getCodes = async (req, res) => {
   try {
     const codes = await Code.find().lean()
-    return res.json({codes})
+    return res.json(codes)
   } catch (e) {
     console.log(e)
     return  res.status(500).json({error:'Error de servidor'}) 

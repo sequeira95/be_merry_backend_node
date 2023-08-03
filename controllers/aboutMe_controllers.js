@@ -18,7 +18,6 @@ export const createEmpresa = async (req, res) => {
       name,
       history,
     })
-    console.log(req.files)
     if(req.files){
       const logo = req.files?.logo
       const extensionLogo = logo.mimetype.split('/')[1]
@@ -28,7 +27,6 @@ export const createEmpresa = async (req, res) => {
       const extensionAboutMe = logo.mimetype.split('/')[1]
       const namePathAboutMe = `${nanoid(10)}.${extensionAboutMe}`
       const resImgPAboutMe = await uploadImgPrincipal(imgAboutMe.data, namePathAboutMe)
-      console.log('imagen', resImgP)
       empresa.logo = {
         path:resImgPLogo.filePath,
         type:extensionLogo,
