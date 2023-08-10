@@ -15,6 +15,16 @@ export const getProduts = async (req, res) => {
     return  res.status(500).json({error:'Error de servidor'}) 
   }
 }
+export const getProduct = async (req, res) =>{
+  const params = req.params
+  try{
+    const product = await Product.findOne({_id:params.productId}).lean()
+    return res.json(product)
+  }catch (e){
+    console.log(e)
+    return  res.status(500).json({error:'Error de servidor'}) 
+  }
+}
 export const createProduc = async (req, res) => {
   try {
     //const user = await User.findOne({_id:req.uid}).lean()
